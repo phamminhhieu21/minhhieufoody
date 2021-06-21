@@ -19,90 +19,7 @@
 	<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
   <link rel="stylesheet" href="/css/main.css">
   <link rel="stylesheet" href="/css/dungchung.css">
-  <!--  -->
-  <script src="js/jquery.min.js"></script>
-    <script>
-        window.fbAsyncInit = function() {
-            // FB JavaScript SDK configuration and setup
-            FB.init({
-              appId      : '179304044055656', // FB App ID
-              cookie     : true,  // enable cookies to allow the server to access the session
-              xfbml      : true,  // parse social plugins on this page
-              version    : 'v3.2' // use graph api version 2.8
-            });
-            
-            // Check whether the user already logged in
-            FB.getLoginStatus(function(response) {
-                if (response.status === 'connected') {
-                    //display user data
-                    getFbUserData();
-                }
-            });
-        };
-        
-        // Load the JavaScript SDK asynchronously
-        (function(d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) return;
-            js = d.createElement(s); js.id = id;
-            js.src = "//connect.facebook.net/en_US/sdk.js";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-        
-        // Facebook login with JavaScript SDK
-        function fbLogin() {
-            FB.login(function (response) {
-                if (response.authResponse) {
-                    // Get and display the user profile data
-                    getFbUserData();
-                } else {
-                    document.getElementById('status').innerHTML = 'User cancelled login or did not fully authorize.';
-                }
-            }, {scope: 'email'});
-        }
-        // Fetch the user profile data from facebook
-        function getFbUserData(){
-        FB.api('/me', {locale: 'en_US', fields: 'id,first_name,last_name,email,link,gender,locale,picture'},
-        function (response) {
-        document.getElementById('fbLink').setAttribute("onclick","fbLogout()");
-        document.getElementById('fbLink').innerHTML = 'Đăng xuất khỏi facebook';
-        document.getElementById('status').innerHTML = '<p>Thanks for logging in, ' + response.first_name + '!</p>';
-        document.getElementById('userData').innerHTML = '<h4>XEM LẠI INFO</h4><p><img src="'+response.picture.data.url+'"/></p><p><b>FB ID:</b> '+response.id+'</p><p><b>Name:</b> '+response.first_name+' '+response.last_name+'</p><p><b>Email:</b> '+response.email+'</p><p><b>Gender:</b> '+response.gender+'</p><p><b>FB Profile:</b> <a target="_blank" href="'+response.link+'">click to view profile</a></p>';
-		
-        // Save user data
-        saveUserData(response);
-    });
-}
-        // Fetch the user profile data from facebook
-        function getFbUserData(){
-            FB.api('/me', {locale: 'en_US', fields: 'id,first_name,last_name,email,link,gender,locale,picture'},
-            function (response) {
-                document.getElementById('fbLink').setAttribute("onclick","fbLogout()");
-                document.getElementById('fbLink').innerHTML = 'Đăng xuất khỏi facebook';
-                document.getElementById('status').innerHTML = '<p>Đăng nhập thành công bạn iu, ' + response.first_name + '!</p>';
-                document.getElementById('userData').innerHTML = '<h4>XEM LẠI INFO</h4><p><img src="'+response.picture.data.url+'"/></p><p><b>FB ID:</b> '+response.id+'</p><p><b>Name:</b> '+response.first_name+' '+response.last_name+'</p><p><b>Email:</b> '+response.email+'</p><p><b>Gender:</b> '+response.gender+'</p><p><b>FB Profile:</b> <a target="_blank" href="'+response.link+'">click to view profile</a></p>';
-                //saveUserData
-                saveUserData(response);
-            });
-        }
-        // Save user data to the database
-        function saveUserData(userData){
-        $.post('userData.php', {oauth_provider:'facebook',userData: JSON.stringify(userData)}, function(){ return true; });
-        }
-        
-        // Logout from facebook
-        function fbLogout() {
-            FB.logout(function() {
-                document.getElementById('fbLink').setAttribute("onclick","fbLogin()");
-                document.getElementById('fbLink').innerHTML = '<img src="images/fb-login-btn.png"/>';
-                document.getElementById('userData').innerHTML = '';
-                document.getElementById('status').innerHTML = '<p>Cảm ơn bạn đã sử dụng dịch vụ chúng tôi</p>';
-            });
-        }
-        </script>
-</head>
-  <!--  -->
-
+  
   <body onload="onloadAll()">
   	<style type="text/css">
   		@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
@@ -1613,6 +1530,90 @@ function Logout() {
         </div>
         
     </div>
+	  <!--  -->
+  <script src="js/jquery.min.js"></script>
+    <script>
+        window.fbAsyncInit = function() {
+            // FB JavaScript SDK configuration and setup
+            FB.init({
+              appId      : '179304044055656', // FB App ID
+              cookie     : true,  // enable cookies to allow the server to access the session
+              xfbml      : true,  // parse social plugins on this page
+              version    : 'v3.2' // use graph api version 2.8
+            });
+            
+            // Check whether the user already logged in
+            FB.getLoginStatus(function(response) {
+                if (response.status === 'connected') {
+                    //display user data
+                    getFbUserData();
+                }
+            });
+        };
+        
+        // Load the JavaScript SDK asynchronously
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+        
+        // Facebook login with JavaScript SDK
+        function fbLogin() {
+            FB.login(function (response) {
+                if (response.authResponse) {
+                    // Get and display the user profile data
+                    getFbUserData();
+                } else {
+                    document.getElementById('status').innerHTML = 'User cancelled login or did not fully authorize.';
+                }
+            }, {scope: 'email'});
+        }
+        // Fetch the user profile data from facebook
+        function getFbUserData(){
+        FB.api('/me', {locale: 'en_US', fields: 'id,first_name,last_name,email,link,gender,locale,picture'},
+        function (response) {
+        document.getElementById('fbLink').setAttribute("onclick","fbLogout()");
+        document.getElementById('fbLink').innerHTML = 'Đăng xuất khỏi facebook';
+        document.getElementById('status').innerHTML = '<p>Thanks for logging in, ' + response.first_name + '!</p>';
+        document.getElementById('userData').innerHTML = '<h4>XEM LẠI INFO</h4><p><img src="'+response.picture.data.url+'"/></p><p><b>FB ID:</b> '+response.id+'</p><p><b>Name:</b> '+response.first_name+' '+response.last_name+'</p><p><b>Email:</b> '+response.email+'</p><p><b>Gender:</b> '+response.gender+'</p><p><b>FB Profile:</b> <a target="_blank" href="'+response.link+'">click to view profile</a></p>';
+		
+        // Save user data
+        saveUserData(response);
+    });
+}
+        // Fetch the user profile data from facebook
+        function getFbUserData(){
+            FB.api('/me', {locale: 'en_US', fields: 'id,first_name,last_name,email,link,gender,locale,picture'},
+            function (response) {
+                document.getElementById('fbLink').setAttribute("onclick","fbLogout()");
+                document.getElementById('fbLink').innerHTML = 'Đăng xuất khỏi facebook';
+                document.getElementById('status').innerHTML = '<p>Đăng nhập thành công bạn iu, ' + response.first_name + '!</p>';
+                document.getElementById('userData').innerHTML = '<h4>XEM LẠI INFO</h4><p><img src="'+response.picture.data.url+'"/></p><p><b>FB ID:</b> '+response.id+'</p><p><b>Name:</b> '+response.first_name+' '+response.last_name+'</p><p><b>Email:</b> '+response.email+'</p><p><b>Gender:</b> '+response.gender+'</p><p><b>FB Profile:</b> <a target="_blank" href="'+response.link+'">click to view profile</a></p>';
+                //saveUserData
+                saveUserData(response);
+            });
+        }
+        // Save user data to the database
+        function saveUserData(userData){
+        $.post('userData.php', {oauth_provider:'facebook',userData: JSON.stringify(userData)}, function(){ return true; });
+        }
+        
+        // Logout from facebook
+        function fbLogout() {
+            FB.logout(function() {
+                document.getElementById('fbLink').setAttribute("onclick","fbLogin()");
+                document.getElementById('fbLink').innerHTML = '<img src="images/fb-login-btn.png"/>';
+                document.getElementById('userData').innerHTML = '';
+                document.getElementById('status').innerHTML = '<p>Cảm ơn bạn đã sử dụng dịch vụ chúng tôi</p>';
+            });
+        }
+        </script>
+</head>
+  <!--  -->
+
     <div class="footer__bottom">
         <div class="grid__container">
             <p class="footer__text">© 2021 Bản Quyền Thuộc về PHAM MINH HIEU</p>
