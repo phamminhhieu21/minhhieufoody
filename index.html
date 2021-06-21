@@ -2,24 +2,95 @@
 <!-- Created By CodingNepal -->
 <html lang="en" dir="ltr">
   <head>
-    <meta charset="utf-8">
-    <title>MINH HIEU FOODY</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <title>MINH HIEU FOODY</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <script
   src="https://code.jquery.com/jquery-3.4.1.js"
   integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
   crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="/Font/fontawesome-free-5.15.3-web/css/all.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="./assets/css/main.css">
+  <link rel="stylesheet" href="./assets/css/dungchung.css">
+  <link rel="stylesheet" href="./assets/Font/fontawesome-free-5.15.3-web/css/all.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-	<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-  <link rel="stylesheet" href="/css/main.css">
-  <link rel="stylesheet" href="/css/dungchung.css">
+	<link  href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <script>
+    window.fbAsyncInit = function() {
+    // FB JavaScript SDK configuration and setup
+    FB.init({
+      appId      : '290460029531798', // FB App ID
+      cookie     : true,  // enable cookies to allow the server to access the session
+      xfbml      : true,  // parse social plugins on this page
+      version    : 'v3.2' // use graph api version 2.8
+    });
+    
+    // Check whether the user already logged in
+    FB.getLoginStatus(function(response) {
+        if (response.status === 'connected') {
+            //display user data
+            getFbUserData();
+        }
+    });
+};
+ // Load the JavaScript SDK asynchronously
+(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+// Facebook login with JavaScript SDK
+function fbLogin() {
+    FB.login(function (response) {
+        if (response.authResponse) {
+            // Get and display the user profile data
+            getFbUserData();
+        } else {
+            document.getElementById('status').innerHTML = 'User cancelled login or did not fully authorize.';
+        }
+    }, {scope: 'email'});
+}
+
+// Fetch the user profile data from facebook
+function getFbUserData(){
+    FB.api('/me', {locale: 'en_US', fields: 'id,first_name,last_name,email,link,gender,locale,picture'},
+    function (response) {
+        document.getElementById('fbLink').setAttribute("onclick","fbLogout()");
+        document.getElementById('fbLink').innerHTML = 'Logout from Facebook';
+        document.getElementById('status').innerHTML = '<p>Thanks for logging in, ' + response.first_name + '!</p>';
+        document.getElementById('userData').innerHTML = '<h2>Facebook Profile Details</h2><p><img src="'+response.picture.data.url+'"/></p><p><b>FB ID:</b> '+response.id+'</p><p><b>Name:</b> '+response.first_name+' '+response.last_name+'</p><p><b>Email:</b> '+response.email+'</p><p><b>Gender:</b> '+response.gender+'</p><p><b>FB Profile:</b> <a target="_blank" href="'+response.link+'">click to view profile</a></p>';
+		
+        // Save user data
+        saveUserData(response);
+    });
+}
+
+// Save user data to the database
+function saveUserData(userData){
+    $.post('userData.php', {oauth_provider:'facebook',userData: JSON.stringify(userData)}, function(){ return true; });
+}
+
+// Logout from facebook
+function fbLogout() {
+    FB.logout(function() {
+        document.getElementById('fbLink').setAttribute("onclick","fbLogin()");
+        document.getElementById('fbLink').innerHTML = '<img src="images/fb-login-btn.png"/>';
+        document.getElementById('userData').innerHTML = '';
+        document.getElementById('status').innerHTML = '<p>You have successfully logout from Facebook.</p>';
+    });
+}
+  </script>
   
+</head>
   <body onload="onloadAll()">
   	<style type="text/css">
   		@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
@@ -189,9 +260,11 @@ a.active,a:hover{
       opacity: 1;
     }
 
-    
+  
   </style>
 
+  
+  
 
   
 
@@ -379,19 +452,18 @@ box-shadow: 10px 13px 38px -19px rgba(251,146,0,1);">Đặt bàn ngay bây giờ
     <button onclick="Login()" class="btn btn-primary mt-4" style="width: 100%;background: #fb9200;border: 0;outline: none;">Đăng nhập</button>
     <p id="statusLogin" class="text-center mt-4" style="font-size: 90%;color: red;"></p>
     <p onclick="move_signup()" class="text-center mt-3" style="font-size: 90%">Bạn chưa có tài khoản, Đăng ký<strong style="color:#fb9200 "> tại đây</strong> </p>
-    <!-- đăng nhập với facebook -->
-    <!-- Display login status -->
-          <div id="status"></div>
+    <div class="fb-box">
+      <!-- Display login status -->
+      <div id="status"></div>
 
-          <!-- Facebook login or logout button -->
-          <a href="javascript:void(0);" onclick="fbLogin();" id="fbLink">
-              <span style="margin-left: 35px;">Nếu bạn thích dùng FACEBOOK :))</span>
-          </a>
+      <!-- Facebook login or logout button -->
+      <a href="javascript:void(0);" id="fbLink" onclick="fbLogin();"><img src=""/>
+          Đăng nhập với Facebook
+      </a>
 
-          <!-- Display user's profile info -->
-          <div class="ac-data" id="userData" style="font-size:14px; ">
-           
-          </div>
+      <!-- Display user's profile info -->
+      <div class="ac-data" id="userData"></div>
+  </div>
     </div>
     </div>
 
@@ -1434,7 +1506,7 @@ function Logout() {
         </a>
     </li>
 </ul>
-  <!--  -->
+  <!-- FOOTER -->
   <footer class="footer">
     <div class="grid__footer">
         <div class="grid__row">
@@ -1530,88 +1602,8 @@ function Logout() {
         </div>
         
     </div>
-	  <!--  -->
-  <script src="js/jquery.min.js"></script>
-    <script>
-        window.fbAsyncInit = function() {
-            // FB JavaScript SDK configuration and setup
-            FB.init({
-              appId      : '179304044055656', // FB App ID
-              cookie     : true,  // enable cookies to allow the server to access the session
-              xfbml      : true,  // parse social plugins on this page
-              version    : 'v3.2' // use graph api version 2.8
-            });
-            
-            // Check whether the user already logged in
-            FB.getLoginStatus(function(response) {
-                if (response.status === 'connected') {
-                    //display user data
-                    getFbUserData();
-                }
-            });
-        };
-        
-        // Load the JavaScript SDK asynchronously
-        (function(d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) return;
-            js = d.createElement(s); js.id = id;
-            js.src = "//connect.facebook.net/en_US/sdk.js";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-        
-        // Facebook login with JavaScript SDK
-        function fbLogin() {
-            FB.login(function (response) {
-                if (response.authResponse) {
-                    // Get and display the user profile data
-                    getFbUserData();
-                } else {
-                    document.getElementById('status').innerHTML = 'User cancelled login or did not fully authorize.';
-                }
-            }, {scope: 'email'});
-        }
-        // Fetch the user profile data from facebook
-        function getFbUserData(){
-        FB.api('/me', {locale: 'en_US', fields: 'id,first_name,last_name,email,link,gender,locale,picture'},
-        function (response) {
-        document.getElementById('fbLink').setAttribute("onclick","fbLogout()");
-        document.getElementById('fbLink').innerHTML = 'Đăng xuất khỏi facebook';
-        document.getElementById('status').innerHTML = '<p>Thanks for logging in, ' + response.first_name + '!</p>';
-        document.getElementById('userData').innerHTML = '<h4>XEM LẠI INFO</h4><p><img src="'+response.picture.data.url+'"/></p><p><b>FB ID:</b> '+response.id+'</p><p><b>Name:</b> '+response.first_name+' '+response.last_name+'</p><p><b>Email:</b> '+response.email+'</p><p><b>Gender:</b> '+response.gender+'</p><p><b>FB Profile:</b> <a target="_blank" href="'+response.link+'">click to view profile</a></p>';
-		
-        // Save user data
-        saveUserData(response);
-    });
-}
-        // Fetch the user profile data from facebook
-        function getFbUserData(){
-            FB.api('/me', {locale: 'en_US', fields: 'id,first_name,last_name,email,link,gender,locale,picture'},
-            function (response) {
-                document.getElementById('fbLink').setAttribute("onclick","fbLogout()");
-                document.getElementById('fbLink').innerHTML = 'Đăng xuất khỏi facebook';
-                document.getElementById('status').innerHTML = '<p>Đăng nhập thành công bạn iu, ' + response.first_name + '!</p>';
-                document.getElementById('userData').innerHTML = '<h4>XEM LẠI INFO</h4><p><img src="'+response.picture.data.url+'"/></p><p><b>FB ID:</b> '+response.id+'</p><p><b>Name:</b> '+response.first_name+' '+response.last_name+'</p><p><b>Email:</b> '+response.email+'</p><p><b>Gender:</b> '+response.gender+'</p><p><b>FB Profile:</b> <a target="_blank" href="'+response.link+'">click to view profile</a></p>';
-                //saveUserData
-                saveUserData(response);
-            });
-        }
-        // Save user data to the database
-        function saveUserData(userData){
-        $.post('userData.php', {oauth_provider:'facebook',userData: JSON.stringify(userData)}, function(){ return true; });
-        }
-        
-        // Logout from facebook
-        function fbLogout() {
-            FB.logout(function() {
-                document.getElementById('fbLink').setAttribute("onclick","fbLogin()");
-                document.getElementById('fbLink').innerHTML = '<img src="images/fb-login-btn.png"/>';
-                document.getElementById('userData').innerHTML = '';
-                document.getElementById('status').innerHTML = '<p>Cảm ơn bạn đã sử dụng dịch vụ chúng tôi</p>';
-            });
-        }
-        </script>
-</head>
+    
+</footer>
   <!--  -->
 
     <div class="footer__bottom">
@@ -1620,7 +1612,7 @@ function Logout() {
         </div>
     </div>
     
-</footer>
+
   </body>
 </html>
 
