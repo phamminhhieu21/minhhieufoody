@@ -21,101 +21,40 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 	<link  href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
- <style type="text/css">
-      /* Set the size of the div element that contains the map */
-      #map {
-        height: 400px;
-        /* The height is 400 pixels */
-        width: 40%;
-	      margin: 0 auto;
-        /* The width is the width of the web page */
-      }
-    </style>
-    <script>
-      // Initialize and add the map
-      function initMap() {
-        // The location of Uluru
-        const uluru = { lat:16.060085930452416 , lng: 108.20979584155239 }; 
-        // The map, centered at Uluru
-        const map = new google.maps.Map(document.getElementById("map"), {
-          zoom: 20,
-          center: uluru,
-        });
-        // The marker, positioned at Uluru
-        const marker = new google.maps.Marker({
-          position: uluru,
-          map: map,
-        });
-      }
-    </script>
-	  <script>
-    // [1] load lên các thành phần cần thiết
-    window.fbAsyncInit = function() {
-    // FB JavaScript SDK configuration and setup
-    FB.init({
-      appId      : '290460029531798', // FB App ID
-      cookie     : true,  // enable cookies to allow the server to access the session
-      xfbml      : true,  // parse social plugins on this page
-      version    : 'v3.2' // use graph api version 2.8
-    });
-    // kiểm tra trạng thái hiện tại
-    FB.getLoginStatus(function (response){
-        statusChangedCallback(response);
-    });
-  };
-
-    // [2] xử lý trạng thái đăng nhập
-    function statusChangedCallback(response){
-      // ng dùng đã đăng nhập fb và đăng nhập fb vào ứng dụng
-      if(response.status === 'connected'){
-        // alert('bạn đã đăng nhập thành công!');
-        ShowWelcome();
-      }
-      // ng dùng đăng nhập fb nhưng chưa đăng nhập ứng dụng
-      else if(response.status === 'not_authorized'){
-        // alert('bạn chưa đăng nhập ứng dụng');
-        ShowLoginButton();
-      }
-      // ng dùng chưa đăng nhập fb
-      else{
-        // alert('bạn chưa đăng nhập fb');
-        ShowLoginButton();
-      }
-    }
-    // [3] yêu cầu đăng nhập
-    function RequestLoginFB(){
-      window.location = 'http://graph.facebook.com/oauth/authorize?client_id=290460029531798&scope=public_profile.email.user_like&redirect_uri=https://mhieu20.github.io/minhhieufoody/';
-    }
-    // [4] hiển thị nút đăng Nhập
-    function ShowLoginButton(){
-      document.getElementById('btb').setAttribute('style','display:block');
-      document.getElementById('lbl').setAttribute('style','display:none');
-    }
-    // [5] chào mừng người dùng đã đăng nhập
-    function ShowWelcome(){
-      document.getElementById('btb').setAttribute('style','display:none');
-      FB.api('/me', function(response){
-          var name = response.name;
-          var username = response.username;
-          var id = response.id;
-          var email = response.email;
-          document.getElementById('lbl').innerHTML = 'Tên'+name+' | username='+username+' | Email='+email+' | id='+id;
-          document.getElementById('lbl').setAttribute('style','display:block');
-      });
-    };
-  </script>
-  <div class="fb-root"></div>
-  <script>
-    (function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.2&appId=290460029531798";
-    fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
-  </script>
-  <!-- nút đăng nhập -->
   
+  <style type="text/css">
+    /* Set the size of the div element that contains the map */
+    #map {
+      height: 400px;
+      /* The height is 400 pixels */
+      width: 40%;
+      margin: 0 auto;
+      
+      /* The width is the width of the web page */
+    }
+  </style>
+  <script>
+    // Initialize and add the map
+    function initMap() {
+      // The location of Uluru
+      const uluru = { lat:16.060085930452416 , lng: 108.20979584155239 }; 
+      // The map, centered at Uluru
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 20,
+        center: uluru,
+      });
+      // The marker, positioned at Uluru
+      const marker = new google.maps.Marker({
+        position: uluru,
+        map: map,
+      });
+    }
+
+  
+  </script>
+  
+  <div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v11.0&appId=1231184250654869&autoLogAppEvents=1" nonce="TcV4II4r"></script>
 </head>
   <body onload="onloadAll()">
   	<style type="text/css">
@@ -290,7 +229,51 @@ a.active,a:hover{
   </style>
 
   
-  
+<script>
+
+  function statusChangeCallback(response) {  // Called with the results from FB.getLoginStatus().
+    console.log('statusChangeCallback');
+    console.log(response);                   // The current login status of the person.
+    if (response.status === 'connected') {   // Logged into your webpage and Facebook.
+      testAPI();  
+    } else {                                 // Not logged into your webpage or we are unable to tell.
+      document.getElementById('status').innerHTML = 'Please log ' +
+        'into this webpage.';
+    }
+  }
+
+
+  function checkLoginState() {               // Called when a person is finished with the Login Button.
+    FB.getLoginStatus(function(response) {   // See the onlogin handler
+      statusChangeCallback(response);
+    });
+  }
+
+
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '1231184250654869',
+      cookie     : true,                     // Enable cookies to allow the server to access the session.
+      xfbml      : true,                     // Parse social plugins on this webpage.
+      version    : 'v11.0'           // Use this Graph API version for this call.
+    });
+
+
+    FB.getLoginStatus(function(response) {   // Called after the JS SDK has been initialized.
+      statusChangeCallback(response);        // Returns the login status.
+    });
+  };
+ 
+  function testAPI() {                      // Testing Graph API after login.  See statusChangeCallback() for when this call is made.
+    console.log('Welcome!  Fetching your information.... ');
+    FB.api('/me', function(response) {
+      console.log('Successful login for: ' + response.name);
+      document.getElementById('status').innerHTML =
+        'Thanks for logging in, ' + response.name + '!';
+    });
+  }
+
+</script>
 
   
 
@@ -478,15 +461,9 @@ box-shadow: 10px 13px 38px -19px rgba(251,146,0,1);">Đặt bàn ngay bây giờ
     <button onclick="Login()" class="btn btn-primary mt-4" style="width: 100%;background: #fb9200;border: 0;outline: none;">Đăng nhập</button>
     <p id="statusLogin" class="text-center mt-4" style="font-size: 90%;color: red;"></p>
     <p onclick="move_signup()" class="text-center mt-3" style="font-size: 90%">Bạn chưa có tài khoản, Đăng ký<strong style="color:#fb9200 "> tại đây</strong> </p>
-    <div class="fb-box">
-      <!-- Display login status -->
-      
-      <input id="btb" type="button" value="ĐĂNG NHẬP" onclick="RequestLoginFB()" style="display: block;"  />
-      <p id="lbl" style="display: none;"> BẠN ĐÃ ĐĂNG NHẬP THÀNH CÔNG</p>
-      <br/>
-      <!-- Facebook login or logout button -->
-      
-  </div>
+    <!-- The JS SDK Login Button -->
+
+    <div class="fb-login-button" data-width="" data-size="large" data-button-type="continue_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="false"></div>
     </div>
     </div>
 
@@ -1529,17 +1506,16 @@ function Logout() {
         </a>
     </li>
 </ul>
-	  
-    <h3 style="text-align:center;">My Google Maps Demo</h3>
+<!-- Google map -->
+<h3 style="text-align:center;">My location</h3>
     <!--The div element for the map -->
     <div id="map"></div>
 
     <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCiDb9m7tCIAnq_nALHTWn5k4G4XjKytzA&callback=initMap&libraries=&v=weekly"
-      async
+    <script async
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPXqT6rSz1DJygkxmDPmu9PEJSdVEWQP0&callback=initMap&libraries=&v=weekly"
+      
     ></script>
-  
   <!-- FOOTER -->
   <footer class="footer">
     <div class="grid__footer">
